@@ -1,6 +1,6 @@
 import sys
 
-def openFile(FIQ): # takes in a raw text file, and returns a list of strings (tokens) that were separated by spaces. all other whitespace is removed.
+def convertFile(FIQ): # takes in a raw text file, and returns a list of strings (tokens) that were separated by spaces. all other whitespace is removed.
     file = open(FIQ, "r")
     lines = []
     for x in file:
