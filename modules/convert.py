@@ -20,6 +20,7 @@ def convertFile(FIQ): # takes in a raw text file, and returns a list of strings 
         for token in lineTokens:
             tokens.append(token)# the token list here is every single sequence of characters separated by spaces - newlines ignored
     # remove empty strings - meaning token list returned is every sequence of characters separated by whitespace, specifics ignored
+    emptyCount=0
     for token in tokens:# just empty line removal function from above
         if token == "":
             emptyCount+=1
