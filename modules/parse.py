@@ -43,27 +43,27 @@ def parseInBrackets(LIQ):# List in Question
         LIQ[i] = CACBTN(LIQ[i])
         match(LIQ[i]):
             case "blus":
-                LIQ = "+"
+                LIQ[i] = "+"
             case "binus":
-                LIQ = "-"
+                LIQ[i] = "-"
             case "bimes":
-                LIQ = "*"
+                LIQ[i] = "*"
             case "bivide":
-                LIQ = "/"
+                LIQ[i] = "/"
             case "bore":
-                LIQ = ">"
+                LIQ[i] = ">"
             case "bess":
-                LIQ = "<"
+                LIQ[i] = "<"
             case "biss":
-                LIQ = "="
+                LIQ[i] = "="
             case "band":
-                LIQ = "&"
+                LIQ[i] = "&"
             case "binput":
-                LIQ = "input"
+                LIQ[i] = "input"
             case "bot":
-                LIQ = "!"
+                LIQ[i] = "!"
             case "bat":
-                LIQ = "@" 
+                LIQ[i] = "@" 
     return LIQ
 
 
@@ -72,6 +72,8 @@ def parseInBrackets(LIQ):# List in Question
 def parseTokens(tokens):# takes in raw tokens, outputs instructions
     # step one: search through for "b" tokens, and group up lists so that
     tokens = groupParens(tokens)
+    for i in range(len(tokens)):
+        tokens[i] = parseInBrackets(tokens[i])
     output = []
     i = 0
     while i < len(tokens):
