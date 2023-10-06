@@ -20,11 +20,11 @@ def groupParens(tokens):# takes in tokens, outputs tokens nested via b parens
         i+=1
     return output
 
-def CACBTN(SIQ): # Check And Convert Bs To Number (String in Question)
+def CBtT(SIQ): # Convert Bokens to Tokens (String in Question)
 # if string is not perfectly formatted as bumber, it will just return the string unchanged
-    if SIQ[0:2] != "BB":
+    if SIQ[0:2] != "BB" and SIQ[0:3] != "BbB":
         return SIQ
-    else:
+    elif SIQ[0:2] == "BB":
         counter = 0
         for char in SIQ[2:]:
             if char == "b":
@@ -32,15 +32,20 @@ def CACBTN(SIQ): # Check And Convert Bs To Number (String in Question)
             else:
                 return SIQ
         return counter
+    elif SIQ[-3:] == "BbB":
+        return "\"" + SIQ[3:-3] + "\""
+    return SIQ
 
 def parseInBrackets(LIQ):# List in Question
     # parser used on a set of brackets in code: ["bum", "bore", "BBb"] - > ["bum", ">", 1]
+    # should call itself on sublists
     if type(LIQ) != list:
         return LIQ# this should only operate on lists
     if len(LIQ) == 1:
         return LIQ[0]# if it's a list with one item, just return the item outside of brackets. this way, statements like "brint b "bogos binted" B" and "brint "bogos binted"" are equivalent
     for i in range(len(LIQ)):# convert all the bumbers to integers
-        LIQ[i] = CACBTN(LIQ[i])
+        LIQ[i] = CBtT(LIQ[i])
+        # switch around tokens
         match(LIQ[i]):
             case "blus":
                 LIQ[i] = "+"
@@ -55,7 +60,7 @@ def parseInBrackets(LIQ):# List in Question
             case "bess":
                 LIQ[i] = "<"
             case "biss":
-                LIQ[i] = "="
+                LIQ[i] = "=="
             case "band":
                 LIQ[i] = "&"
             case "binput":
@@ -64,13 +69,16 @@ def parseInBrackets(LIQ):# List in Question
                 LIQ[i] = "!"
             case "bat":
                 LIQ[i] = "@" 
+        if type(LIQ[i]) == list:# *recursion* for sub brackets
+            LIQ[i] = parseInBrackets(LIQ[i])
     return LIQ
 
 
 # instructions in a list are formatted so each operation is its own separate sublist, and bbrackets are strings:
 # [["if", [1, ">", 0]], "bB", ["print", "\"bogos binted\""], "Bb"]
 def parseTokens(tokens):# takes in raw tokens, outputs instructions
-    # step one: search through for "b" tokens, and group up lists so that
+    # step one: search through for "b" tokens, and group up lists accordingly
+    # ["bif", "b", "bexample", "biss", "BBbb", "B"] -> ["bif", ["bexample", "biss", "BBbb"]]
     tokens = groupParens(tokens)
     for i in range(len(tokens)):
         tokens[i] = parseInBrackets(tokens[i])
@@ -79,15 +87,15 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
     while i < len(tokens):
         match(tokens[i]):
             case "brint":
-                output.append(["print", CACBTN(tokens[i + 1])])
+                output.append(["print", CBtT(tokens[i + 1])])
                 i+=2
                 continue
             case "bif":
-                output.append(["if", CACBTN(tokens[i + 1])])
+                output.append(["if", CBtT(tokens[i + 1])])
                 i+=2
                 continue
             case "boop":
-                output.append(["while", CACBTN(tokens[i + 1])])
+                output.append(["while", CBtT(tokens[i + 1])])
                 i+=2
                 continue
             case "bB":
@@ -99,7 +107,7 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
                 i+=1
                 continue
             case "bis":
-                output.append(["setVar", CACBTN(tokens[i - 1]), CACBTN(tokens[i + 1])])
+                output.append(["setVar", CBtT(tokens[i - 1]), CBtT(tokens[i + 1])])
                 i+=2
                 continue
         i+=1
