@@ -22,5 +22,5 @@ binput <arg1> -> input(<arg1>)
 bot <arg1> -> <arg1> flipped (0 -> 1, 1 -> 0)
 
 Literal Values:
-Strings - Surround them with quotation marks: "Example"
-Integers - "BB" + "b"s: "BBbbbbb" -> 5, "BBb" -> 1
+Strings - Surround them with BbB (BbB___BbB): BbBExampleBbB, BbBBogos Binted!BbB
+(Positive) Integers - "BB" + "b"s: "BBbbbbb" -> 5, "BBb" -> 1, "BB" -> 0
