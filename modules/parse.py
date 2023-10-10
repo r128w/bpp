@@ -42,7 +42,7 @@ def parseInBrackets(LIQ):# List in Question
     if type(LIQ) != list:
         return LIQ# this should only operate on lists
     if len(LIQ) == 1:
-        return LIQ[0]# if it's a list with one item, just return the item outside of brackets. this way, statements like "brint b "bogos binted" B" and "brint "bogos binted"" are equivalent
+        return LIQ[0]# if it's a list with one item, just return the item outside of brackets. this way, statements like "brint b BbBbogos bintedBbB B" and "brint BbBbogos bintedBbB" are equivalent
     for i in range(len(LIQ)):# convert all the bumbers to integers
         LIQ[i] = CBtT(LIQ[i])
         # switch around tokens
@@ -73,6 +73,9 @@ def parseInBrackets(LIQ):# List in Question
             LIQ[i] = parseInBrackets(LIQ[i])
     return LIQ
 
+commandTerms = ["print", "if", "while", "bB", "Bb", "setVar", "input", "+", "-", "*", "/", "!", "@", "<", ">"]#list of tokens that should not be replaced with ids
+def simplifyVariables(input):# inputs list of parsed tokens, outputs same list with instances of variables replaced with "v<id>"
+    return
 
 # instructions in a list are formatted so each operation is its own separate sublist, and bbrackets are strings:
 # [["if", [1, ">", 0]], "bB", ["print", "\"bogos binted\""], "Bb"]
@@ -112,3 +115,4 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
                 continue
         i+=1
     return output
+
