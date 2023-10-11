@@ -74,8 +74,45 @@ def parseInBrackets(LIQ):# List in Question
     return LIQ
 
 commandTerms = ["print", "if", "while", "bB", "Bb", "setVar", "input", "+", "-", "*", "/", "!", "@", "<", ">"]#list of tokens that should not be replaced with ids
+
+variables = []# to keep track of the variable ids and names -
+    # first occuring variable is in variables[0], second in [1], etc
+    # so in brint b bogos blus binted B, variables would be ["bogos", "binted"]
+    # the variables var must be external to work with recursion
+
 def simplifyVariables(input):# inputs list of parsed tokens, outputs same list with instances of variables replaced with "v<id>"
-    return
+    output = input
+    
+    for i in range(len(input)):
+        
+        if type(input[i]) == list:# recursively apply this function to every non-list item in every sublist
+            output[i] = simplifyVariables(output[i])
+            continue
+
+        isVariable = True# if it does not match any items in the array above, it must be a variable
+        for term in commandTerms:
+            if input[i] == term:
+                isVariable = False
+        
+        if isVariable == False:# the function only needs to operate on variables
+            continue
+
+        tokenVarID = -1 # start at -1
+        for j in range(len(variables)):# check if the variable's name is already in the list
+            if input[i] == variables[j]:
+                tokenVarID = j
+                break
+
+        if tokenVarID != -1:# if it is, use that id in the output
+            output[i] = "v" + str(tokenVarID)
+            continue
+        
+        output[i] = "v" + str(len(variables))# if the id came out -1 (not there), add it to the variable list
+        variables.append(input[i])
+
+            continue
+        
+    return output
 
 # instructions in a list are formatted so each operation is its own separate sublist, and bbrackets are strings:
 # [["if", [1, ">", 0]], "bB", ["print", "\"bogos binted\""], "Bb"]
