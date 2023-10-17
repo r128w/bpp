@@ -73,7 +73,7 @@ def parseInBrackets(LIQ):# List in Question
             LIQ[i] = parseInBrackets(LIQ[i])
     return LIQ
 
-commandTerms = ["print", "if", "while", "bB", "Bb", "setVar", "input", "+", "-", "*", "/", "!", "@", "<", ">"]#list of tokens that should not be replaced with ids
+commandTerms = ["print", "if", "while", "bB", "Bb", "setVar", "input", "+", "-", "*", "/", "!", "@", "<", ">", "=="]#list of tokens that should not be replaced with ids
 
 variables = []# to keep track of the variable ids and names -
     # first occuring variable is in variables[0], second in [1], etc
@@ -89,14 +89,20 @@ def simplifyVariables(input):# inputs list of parsed tokens, outputs same list w
             output[i] = simplifyVariables(output[i])
             continue
 
-        isVariable = True# if it does not match any items in the array above, it must be a variable
+        isVariable = True
         for term in commandTerms:
             if input[i] == term:
                 isVariable = False
-        
-        if isVariable == False:# the function only needs to operate on variables
-            continue
 
+        if isVariable == False:
+            continue# skip the token
+
+        if type(input[i]) != str:# catch numbers
+            continue# skip
+
+        if input[i][0] == "\"" and input[i][-1] == "\"":# catch literal strings
+            continue# skip
+        
         tokenVarID = -1 # start at -1
         for j in range(len(variables)):# check if the variable's name is already in the list
             if input[i] == variables[j]:
@@ -110,7 +116,7 @@ def simplifyVariables(input):# inputs list of parsed tokens, outputs same list w
         output[i] = "v" + str(len(variables))# if the id came out -1 (not there), add it to the variable list
         variables.append(input[i])
 
-            continue
+        continue
         
     return output
 
@@ -151,5 +157,5 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
                 i+=2
                 continue
         i+=1
+    output=simplifyVariables(output)
     return output
-
