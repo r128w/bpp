@@ -39,6 +39,15 @@ def getValue(input):# magic of recursion function
     #by this point the input must be a list, meaning recursion should happen
 
     # <!!!> errorcase: list is malformed (not 3 items, doesnt contain operation, etc)
+    # need special case for bot and binput
+    if len(input) == 2:
+        match(input[0]):
+            case "input":
+                return input(getValue(input[1]))
+            case "!":
+                if getValue(input[1]) > 0:
+                    return 0
+                return 1
     match(input[1]):# perform the operations
         case "==":
             if getValue(input[0]) == getValue(input[2]):
@@ -52,3 +61,18 @@ def getValue(input):# magic of recursion function
             return getValue(input[0]) * getValue(input[2])# <!!!> errorcase: not numbers
         case "/":
             return getValue(input[0]) / getValue(input[2])# <!!!> errorcase: not numbers
+        case ">":
+            if getValue(input[0]) > getValue(input[2]):
+                return 1
+            return 0
+        case "<":
+            if getValue(input[0]) < getValue(input[2]):
+                return 1
+            return 0
+        case "&":
+            if getValue(input[0]) > 0 and getValue(input[2]) > 0:
+                return 1
+            return 0
+        case "@":
+            return getValue(input[0])[getValue(input[2])]
+        
