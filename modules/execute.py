@@ -31,6 +31,22 @@ def executeInstructions(instructions):
                         elif instructions[currentIndex+forwardOffset] == "Bb":
                             bbracketCounter-=1
                     currentIndex+=forwardOffset
+            # case "back":
+            #     return getValue(instructions[currentIndex][1]) # functionality for functions (if i so wish)
+            case "while":
+                # similar to if, but backwards
+                if getValue(instructions[currentIndex][1]) > 0:# if the argument is true, go back
+                    bbracketCounter = 1
+                    backwardOffset = 1
+                    while bbracketCounter > 0:# <!!!> assumes that instruction directly after "boop" is Bb, could cause error
+                        backwardOffset+=1
+                        currentToken = instructions[currentIndex-backwardOffset]
+                        if currentToken == "Bb":
+                            bbracketCounter+=1
+                        elif currentToken == "bB":
+                            bbracketCounter-=1
+                    currentIndex-=backwardOffset
+
 
 
                 
