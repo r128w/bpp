@@ -46,6 +46,8 @@ def executeInstructions(instructions):
                         elif currentToken == "bB":
                             bbracketCounter-=1
                     currentIndex-=backwardOffset
+            
+
 
 
 
@@ -80,6 +82,8 @@ def getValue(input):# magic of recursion function
                 if getValue(input[1]) > 0:
                     return 0
                 return 1
+            case "len":
+                return len(getValue(input[1]))#<!!!> if type of input[1] isnt a string/list
     match(input[1]):# perform the operations
         case "==":
             if getValue(input[0]) == getValue(input[2]):
