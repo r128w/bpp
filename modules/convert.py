@@ -49,5 +49,5 @@ def convertFile(FIQ): # takes in a raw text file, and returns a list of strings 
             emptyCount+=1
     for i in range(emptyCount):
         tokens.remove("")
-    print(tokens)
+    # print(tokens)
     return tokens
