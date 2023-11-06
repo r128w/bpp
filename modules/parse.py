@@ -81,12 +81,13 @@ def parseInBrackets(LIQ):# List in Question
 
 commandTerms = ["print", "if", "while", "bB", "Bb", "setVar", "setArray", "input", "+", "-", "*", "/", "!", "@", "<", ">", "==", "len"]#list of tokens that should not be replaced with ids
 
-variables = []# to keep track of the variable ids and names -
+variableNames = []# to keep track of the variable ids and names -
     # first occuring variable is in variables[0], second in [1], etc
     # so in brint b bogos blus binted B, variables would be ["bogos", "binted"]
-    # the variables var must be external to work with recursion
+    # the variables var must be external to work with recursionwef
+    # this could conflict with execute's variables[], so i changed it to variableNames 6/11/2023
 
-def simplifyVariables(input):# inputs list of parsed tokens, outputs same list with instances of variables replaced with "v<id>"
+def simplifyVariables(input):# inputs list of instructions, outputs same list with instances of variables replaced with "v<id>"
     output = input
     
     for i in range(len(input)):
@@ -108,10 +109,11 @@ def simplifyVariables(input):# inputs list of parsed tokens, outputs same list w
 
         if input[i][0] == "\"" and input[i][-1] == "\"":# catch literal strings
             continue# skip
+
         
         tokenVarID = -1 # start at -1
-        for j in range(len(variables)):# check if the variable's name is already in the list
-            if input[i] == variables[j]:
+        for j in range(len(variableNames)):# check if the variable's name is already in the list
+            if input[i] == variableNames[j]:
                 tokenVarID = j
                 break
 
@@ -119,8 +121,8 @@ def simplifyVariables(input):# inputs list of parsed tokens, outputs same list w
             output[i] = "v" + str(tokenVarID)
             continue
         
-        output[i] = "v" + str(len(variables))# if the id came out -1 (not there), add it to the variable list
-        variables.append(input[i])
+        output[i] = "v" + str(len(variableNames))# if the id came out -1 (not there), add it to the variable list
+        variableNames.append(input[i])
 
         continue
         
@@ -168,8 +170,9 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
                 output.append(["setArray", CBtT(tokens[i - 1]), CBtT(tokens[i + 1]), CBtT(tokens[i + 3])])# <!!!> spit an error if tokens[i + 2] is not bis
                 i+=4
                 continue
-        # if tokens[i + 1] isnt bat or bis:
+        # TODO only have this run if tokens[i + 1] isnt bat or bis:
         print("Hey! your code bad")# <!!!> this shouldnt be reached (unless there is a bis or a bat next)
         i+=1
     output=simplifyVariables(output)
+    # print(output)
     return output
