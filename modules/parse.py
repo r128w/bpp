@@ -73,11 +73,13 @@ def parseInBrackets(LIQ):# List in Question
                 LIQ[i] = "!"
             case "bat":
                 LIQ[i] = "@" 
+            case "bength":
+                LIQ[i] = "len"
         if type(LIQ[i]) == list:# *recursion* for sub brackets
             LIQ[i] = parseInBrackets(LIQ[i])
     return LIQ
 
-commandTerms = ["print", "if", "while", "bB", "Bb", "setVar", "input", "+", "-", "*", "/", "!", "@", "<", ">", "=="]#list of tokens that should not be replaced with ids
+commandTerms = ["print", "if", "while", "bB", "Bb", "setVar", "setArray", "input", "+", "-", "*", "/", "!", "@", "<", ">", "==", "len"]#list of tokens that should not be replaced with ids
 
 variables = []# to keep track of the variable ids and names -
     # first occuring variable is in variables[0], second in [1], etc
@@ -162,7 +164,12 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
                 output.append(["setVar", CBtT(tokens[i - 1]), CBtT(tokens[i + 1])])
                 i+=2
                 continue
-        print("Hey! your code bad")# this shouldnt be reached
+            case "bat":
+                output.append(["setArray", CBtT(tokens[i - 1]), CBtT(tokens[i + 1]), CBtT(tokens[i + 3])])# <!!!> spit an error if tokens[i + 2] is not bis
+                i+=4
+                continue
+        # if tokens[i + 1] isnt bat or bis:
+        print("Hey! your code bad")# <!!!> this shouldnt be reached (unless there is a bis or a bat next)
         i+=1
     output=simplifyVariables(output)
     return output
