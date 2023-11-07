@@ -3,7 +3,11 @@
 
 # TODO function support by giving executeinstructions a return value and recursion
 
+# TODO have a debug mode or something as an option that prints out tokens parsed and executed, etc
+
 import modules.utilities
+
+variables = []
 
 def executeInstructions(instructions):
     # print("Instruction list:")
@@ -17,14 +21,15 @@ def executeInstructions(instructions):
         match(instructions[currentIndex][0]):#<!!!> if instructions[currentIndex] is an int (somehow) that would throw a type error - i dont think thats even possible though
             case "print":
                 print(getValue(instructions[currentIndex][1]))
+
             case "if":
                 if getValue(instructions[currentIndex][1]) <= 0:# <!!!> errorcase: bif <string> will throw a type error
                     #TODO jump to matching "Bb"
                     #<!!!> errorcase: malformed bbrackets
                     # print("wip")
-                    bbracketCounter = 1
+                    bbracketCounter = 1 
                     forwardOffset = 1
-                    while bbracketCounter > 0:# <!!!> assumes that the instruction directly after "if" is always a bB, could cause errors
+                    while bbracketCounter > 0:# <!!!> assumes that the token directly after "if" is always a bB, could cause errors
                         forwardOffset+=1
                         if instructions[currentIndex+forwardOffset] == "bB":# index + offset could lead to errors if out of bounds, which would happen with malformed bbrackets
                             bbracketCounter+=1
@@ -38,7 +43,7 @@ def executeInstructions(instructions):
                 if getValue(instructions[currentIndex][1]) > 0:# if the argument is true, go back
                     bbracketCounter = 1
                     backwardOffset = 1
-                    while bbracketCounter > 0:# <!!!> assumes that instruction directly after "boop" is Bb, could cause error
+                    while bbracketCounter > 0:# <!!!> assumes that token directly after "boop" is Bb, could cause error
                         backwardOffset+=1
                         currentToken = instructions[currentIndex-backwardOffset]
                         if currentToken == "Bb":
@@ -46,12 +51,39 @@ def executeInstructions(instructions):
                         elif currentToken == "bB":
                             bbracketCounter-=1
                     currentIndex-=backwardOffset
-            
 
+            case "setVar":
+                varName = instructions[currentIndex][1] # <!!!> expects a string formatted like v0 or v82 (v<number>), anything else wont work
+                varID = int(varName[1:]) # chops off the v
+                # print(varID)
+                varValue = getValue(instructions[currentIndex][2])
 
+                while varID >= len(variables): # <!!> if v4 is defined before v3 (for some reason, not even sure if possible (it is possible)), v3 will be initialized as None
+                    variables.append(None)
 
+                variables[varID] = varValue # this is very nice
 
-                
+            case "setArray":
+                arrayName = instructions[currentIndex][1]
+                arrayID = int(arrayName[1:]) # chops off v, very similar to above
+
+                arrayIndex = getValue(instructions[currentIndex][2])
+                valueToSet = getValue(instructions[currentIndex][3])
+
+                # check this array even exists yet, similar to above
+
+                while len(variables) <= arrayID: # as above, if attempting to define an array in an index that hasnt been filled up to yet, initialize lower vars as None
+                    variables.append(None)
+
+                if type(variables[arrayID]) != list:
+                    # if the var isnt an array yet, make it one with its current value at index 0
+                    variables[arrayID] = [variables[arrayID]]
+
+                while arrayIndex >= len(variables[arrayID]): # if the array is being set at a point beyond its bounds, lengthen the array with Nones
+                    variables[arrayID].append(None)
+
+                variables[arrayID][arrayIndex] = valueToSet # clean and nice
+
 
         currentIndex+=1
 
@@ -64,11 +96,12 @@ def getValue(input):# magic of recursion function
     if type(input) == int:
         return input
     
-    if type(input) == str:# TODO variable support
-        if input[0] == "\"" and input[-1] == "\"":# string literals
+    if type(input) == str:
+        if input[0] == "\"" and input[-1] == "\"":# returns string literals as the string inside the quotes
             return input[1:-1]
         # at this point it must be a variable
-        varIndex = int(input[1])
+        varIndex = int(input[1:])# <!!!> assumes variable has been defined, and the variable list is long enough to not throw an out of bounds error - must catch undefined vars
+        return variables[varIndex]
 
     #by this point the input must be a list, meaning recursion should happen
 
