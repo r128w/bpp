@@ -81,6 +81,7 @@ def parseInBrackets(LIQ):# List in Question
 
 commandTerms = ["print", "if", "while", "bB", "Bb", "setVar", "setArray", "input", "+", "-", "*", "/", "!", "@", "<", ">", "==", "len"]#list of tokens that should not be replaced with ids
 
+global variableNames
 variableNames = []# to keep track of the variable ids and names -
     # first occuring variable is in variables[0], second in [1], etc
     # so in brint b bogos blus binted B, variables would be ["bogos", "binted"]
@@ -88,7 +89,7 @@ variableNames = []# to keep track of the variable ids and names -
     # this could conflict with execute's variables[], so i changed it to variableNames 6/11/2023
 
 def simplifyVariables(input):# inputs list of instructions, outputs same list with instances of variables replaced with "v<id>"
-    output = input
+    output = input.copy() # for gods sake, why does python need to be so fancy with references
     
     for i in range(len(input)):
         
@@ -109,8 +110,9 @@ def simplifyVariables(input):# inputs list of instructions, outputs same list wi
 
         if input[i][0] == "\"" and input[i][-1] == "\"":# catch literal strings
             continue# skip
-
         
+        # print("baba booey" + str(input) + str(variableNames))# WHY IS VARIABLENAMES FILLED WITH V0 V1 V2 WHAT
+
         tokenVarID = -1 # start at -1
         for j in range(len(variableNames)):# check if the variable's name is already in the list
             if input[i] == variableNames[j]:
@@ -171,7 +173,7 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
                 i+=4
                 continue
         # TODO only have this run if tokens[i + 1] isnt bat or bis:
-        print("Hey! your code bad")# <!!!> this shouldnt be reached (unless there is a bis or a bat next)
+        # print("Hey! your code bad")# <!!!> this shouldnt be reached (unless there is a bis or a bat next)
         i+=1
     output=simplifyVariables(output)
     # print(output)
