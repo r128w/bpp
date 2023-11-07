@@ -6,6 +6,7 @@
 # TODO have a debug mode or something as an option that prints out tokens parsed and executed, etc
 
 import modules.utilities
+import modules.error
 
 variables = []
 
@@ -95,53 +96,130 @@ def getValue(input):# magic of recursion function
     # base of the tree case
     if type(input) == int:
         return input
+
+    if type(input) == float:
+        return input
     
     if type(input) == str:
+
         if input[0] == "\"" and input[-1] == "\"":# returns string literals as the string inside the quotes
             return input[1:-1]
         # at this point it must be a variable
-        varIndex = int(input[1:])# <!!!> assumes variable has been defined, and the variable list is long enough to not throw an out of bounds error - must catch undefined vars
+        varIndex = int(input[1:])# <!!!.> assumes variable has been defined, and the variable list is long enough to not throw an out of bounds error - must catch undefined vars
+
+        if len(variables) <= varIndex:
+            modules.error.throwError("Variable value accessed without being defined", False)# TODO provide variable name?
+        if variables[varIndex] == None:# None cannot be assigned to variable in code, so a var being none would mean it is undefined
+            modules.error.throwError("Variable value accessed without being defined", False)
+
         return variables[varIndex]
 
-    #by this point the input must be a list, meaning recursion should happen
+    # by this point the input must be a list, meaning recursion should happen
+    if type(input) != list:
+        modules.error.throwError("How did you get the data type " + str(type(input)) + " to appear? Impressive.", True)
 
     # <!!!> errorcase: list is malformed (not 3 items, doesnt contain operation, etc)
     # need special case for bot and binput
     if len(input) == 2:
         match(input[0]):
             case "input":
-                return modules.utilities.getInput(getValue(input[1]))# TODO this will always return a string, add a check to make it return a number if inputted value can be int()ed or float()ed - new getInput() function or smt?
+                return modules.utilities.getInput(getValue(input[1]))# TODOdone this will always return a string, add a check to make it return a number if inputted value can be int()ed or float()ed - new getInput() function or smt?
             case "!":
-                if getValue(input[1]) > 0:
+                argument = getValue(input[1])
+
+                if type(argument) != int and type(argument) != float:
+                    modules.error.throwError("Attempted to invert non-invertible type", False)
+                    
+                if argument > 0:# <!!!.> if its not comparable to 0
                     return 0
                 return 1
             case "len":
-                return len(getValue(input[1]))#<!!!> if type of input[1] isnt a string/list
+                argument = getValue(input[1])
+
+                if type(argument) != str and type(argument) != list:
+                    modules.error.throwError("Attempted to get length of non-string or array", False)
+
+                return len(argument)#<!!!.> if type of input[1] isnt a string/list
+
+    arg1 = getValue(input[0])
+    arg2 = getValue(input[2])
+
     match(input[1]):# perform the operations
-        case "==":
-            if getValue(input[0]) == getValue(input[2]):
+        case "==":# works regardless of data types
+
+            if arg1 == arg2:
                 return 1
-            return 0
+            return 0 #<!!> attention: biss and band are two different functions!!! biss checks for literal similarity, band just checks if they're both above 0
+
         case "+":
-            return getValue(input[0]) + getValue(input[2])# <!!!> errorcase: different types
+
+            if type(arg1) != type(arg2):
+                modules.error.throwError("Attempted to add two different types", False)
+
+            if type(arg1) != str and type(arg1) != int and type(arg1) != float:
+                modules.error.throwError("Attempted to add non-summable type", False)
+
+            return arg1 + arg2# <!!!.> errorcase: different types
+
         case "-":
-            return getValue(input[0]) - getValue(input[2])# <!!!> errorcase: not numbers
+
+            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+                modules.error.throwError("Attempted to subtract non-numeric types", False)
+
+            return arg1 - arg2# <!!!.> errorcase: not numbers
+
         case "*":
-            return getValue(input[0]) * getValue(input[2])# <!!!> errorcase: not numbers
+        
+            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+                modules.error.throwError("Attempted to multiply non-numeric types", False)
+
+            return arg1 * arg2# <!!!.> errorcase: not numbers
+
         case "/":
-            return getValue(input[0]) / getValue(input[2])# <!!!> errorcase: not numbers
+        
+            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+                modules.error.throwError("Attempted to divide non-numeric types", False)
+
+            return arg1 / arg2# <!!!.> errorcase: not numbers
+
         case ">":
-            if getValue(input[0]) > getValue(input[2]):# <!!!> errorcase: not numbers
+        
+            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+                modules.error.throwError("Attempted to compare non-numeric types", False)
+
+            if arg1 > arg2:# <!!!.> errorcase: not numbers
                 return 1
             return 0
+
         case "<":
-            if getValue(input[0]) < getValue(input[2]): # <!!!> errorcase: not numbers
+        
+            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+                modules.error.throwError("Attempted to compare non-numeric types", False)
+
+            if arg1 < arg2: # <!!!.> errorcase: not numbers
                 return 1
             return 0
+
         case "&":
-            if getValue(input[0]) > 0 and getValue(input[2]) > 0: # <!!!> errorcase: not numbers
+
+            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+                modules.error.throwError("Attempted to compare non-numeric types", False)
+
+            if arg1 > 0 and arg2 > 0: # <!!!.> errorcase: not numbers
                 return 1
             return 0
+
         case "@":
-            return getValue(input[0])[getValue(input[2])] # <!!!> getValue(input[0]) not a str or a list
+
+            if type(arg1) != str and type(arg1) != list:
+                modules.error.throwError("Attempted to fetch value at index from a non-indexable type", False)
+            
+            if type(arg2) != int:
+                modules.error.throwError("Attempted to fetch value at non-integer index", False)
+
+            if len(arg1) <= arg2:
+                modules.error.throwError("Attempted to fetch value outside of bounds", False)
+
+            # <!!!.> assumes arg2 is within bounds
+            return arg1[arg2] # <!!!.> getValue(input[0]) not a str or a list or arg2 not an int
         
