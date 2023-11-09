@@ -19,19 +19,31 @@ def executeInstructions(instructions):
     while currentIndex < len(instructions):
         # print(instructions[currentIndex])
 
-        match(instructions[currentIndex][0]):#<!!!> if instructions[currentIndex] is an int (somehow) that would throw a type error - i dont think thats even possible though
+        match(instructions[currentIndex][0]):#<!!> if instructions[currentIndex] is an int (somehow) that would throw a type error - i dont think thats even possible though
             case "print":
                 print(getValue(instructions[currentIndex][1]))
 
             case "if":
-                if getValue(instructions[currentIndex][1]) <= 0:# <!!!> errorcase: bif <string> will throw a type error
-                    #TODO jump to matching "Bb"
-                    #<!!!> errorcase: malformed bbrackets
+
+                argument = getValue(instructions[currentIndex][1])
+
+                if type(argument) != int and type(argument) != float:
+                    modules.error.throwError("Bif statement attempted to evaluate a non-numeric type", False)
+
+                if argument <= 0:# <!!!.> errorcase: bif <string> will throw a type error
+                    #TODOdone jump to matching "Bb"
+                    #<.!!!> errorcase: malformed bbrackets (no matching bbracket to skip to)
                     # print("wip")
                     bbracketCounter = 1 
                     forwardOffset = 1
-                    while bbracketCounter > 0:# <!!!> assumes that the token directly after "if" is always a bB, could cause errors
+                    if currentIndex + 1 >= len(instructions):
+                        modules.error.throwError("Bif statement attempted to skip to BBrackets that do not exist", False)
+                    if instructions[currentIndex+1] != "bB":
+                        modules.error.throwError("Bif statement not followed by a set of BBrackets", False)
+                    while bbracketCounter > 0:# <!!!.> assumes that the token directly after "if" is always a bB, could cause errors
                         forwardOffset+=1
+                        if currentIndex+forwardOffset >= len(instructions):
+                            modules.error.throwError("Bif statement attempted to skip to BBrackets that do not exist", False)
                         if instructions[currentIndex+forwardOffset] == "bB":# index + offset could lead to errors if out of bounds, which would happen with malformed bbrackets
                             bbracketCounter+=1
                         elif instructions[currentIndex+forwardOffset] == "Bb":
