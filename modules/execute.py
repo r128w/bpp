@@ -192,6 +192,9 @@ def getValue(input):# magic of recursion function
             if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
                 modules.error.throwError("Attempted to divide non-numeric types", False)
 
+            if arg2 == 0:
+                modules.error.throwError("Attempted to divide by zero", False)
+
             return arg1 / arg2# <!!!.> errorcase: not numbers
 
         case ">":
