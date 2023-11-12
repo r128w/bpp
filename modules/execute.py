@@ -12,7 +12,7 @@ variables = []
 
 def executeInstructions(instructions):
     # print("Instruction list:")
-    # print(instructions)
+    print(instructions)
     # print("")
     currentIndex = 0
     
