@@ -1,4 +1,5 @@
 import sys
+import modules.error
 
 def toggle(input):# flip true -> false, false -> true
     if input == False:
@@ -11,7 +12,9 @@ def convertFile(FIQ): # takes in a raw text file, and returns a list of strings 
     for x in file:
         lines.append(x)
     for i in range(len(lines)):# gets rid of \n at the end of all lines
-        if i != len(lines)-1:
+        # if i != len(lines)-1:
+        #     lines[i] = lines[i][:-1]
+        if lines[i][-1:] == "\n":
             lines[i] = lines[i][:-1]
     emptyCount = 0
     for i in range(len(lines)):# gets rid of empty lines
@@ -47,6 +50,9 @@ def convertFile(FIQ): # takes in a raw text file, and returns a list of strings 
     for token in tokens:# just empty line removal function from above
         if token == "":
             emptyCount+=1
+        else:# since this goes to the trouble of looping over every token anyway, this checks that everything starts with b
+            if token[0] != "b" and token[0] != "B":
+                modules.error.throwError("You need to start thinking bee. Thinking bee!", False)
     for i in range(emptyCount):
         tokens.remove("")
     # print(tokens)
