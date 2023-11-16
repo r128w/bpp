@@ -15,12 +15,16 @@ def isInt(string):# checks if a string can be int()ed
     for char in string:
         if listContains(digits, char) == False:
             return False
+    if string == "":
+        return False
     return True
 
 def isFloat(string):# checks if a string can be float()ed
     for char in string:
         if listContains(digits+["."], char) == False:# <!!!> multiple decimal points trips it up
             return False
+    if string == "":
+        return False
     return True
 
 
