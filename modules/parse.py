@@ -1,7 +1,9 @@
+import modules.error
+
 
 def groupParens(tokens):# takes in tokens, outputs tokens nested via b parens
     # ['brint', 'b', 'bar', '+' , 'bor', 'B'] -> ['brint', ['bar', '+', 'bor']]
-    #<!!!> errorcase: mismatched brackets
+    #<!!!.> errorcase: mismatched brackets
     output = []
     i = 0
     while i < len(tokens):
@@ -10,8 +12,12 @@ def groupParens(tokens):# takes in tokens, outputs tokens nested via b parens
             lookAhead = 0
             while counter > 0:
                 lookAhead+=1
-                # TODO add check for mismatched brackets:
+                # TODOdone add check for mismatched brackets:
                 # along the lines of before each of the iterations below checking if i + lookahead exceeds token list length
+
+                if i + lookAhead >= len(tokens):
+                    modules.error.throwError("Attempted to group mismatched brackets", False)
+
                 if tokens[i + lookAhead] == "B":
                     counter -= 1
                 elif tokens[i + lookAhead] == "b":
@@ -125,7 +131,7 @@ def simplifyVariables(input):# inputs list of instructions, outputs same list wi
         
         output[i] = "v" + str(len(variableNames))# if the id came out -1 (not there), add it to the variable list
         variableNames.append(input[i])
-
+        # print("aaa " + str(variableNames))
         continue
         
     return output
@@ -140,19 +146,28 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
         tokens[i] = parseInBrackets(tokens[i])
     output = []
     i = 0
-    while i < len(tokens):# TODO make skipping over tokens not possible by keeping track of any tokens not included in the output somehow
+
+    primedForBisorBat = False
+
+    while i < len(tokens):# TODOdone make skipping over tokens not possible by keeping track of any tokens not included in the output somehow
         # print(i)
         # print(tokens[i])
-        match(tokens[i]):#<!!!> errorcase: function without argument is written (ie ending the file with brint)
+        match(tokens[i]):#<!!!.> errorcase: function without argument is written (ie ending the file with brint)
             case "brint":
+                if i + 1 >= len(tokens):
+                    modules.error.throwError("Brint statement called without argument", False)
                 output.append(["print", CBtT(tokens[i + 1])])
                 i+=2
                 continue
             case "bif":
+                if i + 1 >= len(tokens):
+                    modules.error.throwError("Bif statement called without argument", False)
                 output.append(["if", CBtT(tokens[i + 1])])
                 i+=2
                 continue
             case "boop":
+                if i + 1 >= len(tokens):
+                    modules.error.throwError("Boop statement called without argument", False)
                 output.append(["while", CBtT(tokens[i + 1])])
                 i+=2
                 continue
@@ -165,16 +180,43 @@ def parseTokens(tokens):# takes in raw tokens, outputs instructions
                 i+=1
                 continue
             case "bis":
+                if i - 1 < 0:
+                    modules.error.throwError("Bis statement called without variable name", False)
+                if i + 1 >= len(tokens):
+                    modules.error.throwError("Bis statement called without value", False)
+
+                if primedForBisorBat == False: # needs to have been a non-function token skipped last iteration
+                    modules.error.throwError("Bis statement called without variable name", False)
+
                 output.append(["setVar", CBtT(tokens[i - 1]), CBtT(tokens[i + 1])])
+                primedForBisorBat = False
                 i+=2
                 continue
             case "bat":
-                output.append(["setArray", CBtT(tokens[i - 1]), CBtT(tokens[i + 1]), CBtT(tokens[i + 3])])# <!!!> spit an error if tokens[i + 2] is not bis
+
+                if i + 3 >= len(tokens):
+                    modules.error.throwError("Bat statement called without sufficient arguments", False)
+                if i - 1 < 0:
+                    modules.error.throwError("Bat statement called without first argument", False)
+
+                if primedForBisorBat == False:
+                    modules.error.throwError("Bat statement called without first argument", False)
+
+                if tokens[i + 2] != "bis":
+                    modules.error.throwError("Malformed Bat statement - no matching Bis", False)
+
+                output.append(["setArray", CBtT(tokens[i - 1]), CBtT(tokens[i + 1]), CBtT(tokens[i + 3])])# <!!!.> spit an error if tokens[i + 2] is not bis
+                primedForBisorBat = False
                 i+=4
                 continue
-        # TODO only have this run if tokens[i + 1] isnt bat or bis:
+
+        if primedForBisorBat == True:
+            modules.error.throwError("Argument given without function - Bis or Bat statement expected", False)
+
+        primedForBisorBat = True # after this is et true, there needs to be a bis or bat in the next token, or error
+        # TODOdone only have this run if tokens[i + 1] isnt bat or bis:
         # print("Hey! your code bad")# <!!!> this shouldnt be reached (unless there is a bis or a bat next)
-        i+=1
+        i+=1 # to prevent infinite loops
     output=simplifyVariables(output)
     # print(output)
     return output
