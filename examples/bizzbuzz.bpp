@@ -1,0 +1,35 @@
+
+b_limit bis b binput BbBCount to ? BbB B
+
+b_counter bis BBb
+
+bB
+
+    b_output bis BbBBbB
+
+    b_temp bis b_counter
+    bB
+        b_temp bis b b_temp binus BBbbb B
+    Bb boop b_temp
+
+    bif b b_temp biss BB B bB
+        b_output bis b b_output blus BbBBizzBbB B
+    Bb
+
+    b_temp bis b_counter
+    bB
+        b_temp bis b b_temp binus BBbbbbb B
+    Bb boop b_temp
+
+    bif b b_temp biss BB B bB
+        b_output bis b b_output blus BbBBuzzBbB B
+    Bb
+
+    bif b b_output biss BbBBbB B bB
+        b_output bis b_counter
+    Bb
+
+    brint b_output
+
+b_counter bis b b_counter blus BBb B
+Bb boop b b b_limit blus BBb B binus b_counter B
