@@ -1,0 +1,10 @@
+b_counter bis BBb
+
+b_limit bis b binput BbBCount to ? BbB B
+
+bB
+    brint b_counter
+
+    b_counter bis b b_counter blus BBb B
+
+Bb boop b b b_limit blus BBb B binus b_counter B
