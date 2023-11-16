@@ -32,18 +32,21 @@ def executeInstructions(instructions):
 
                 if argument <= 0:# <!!!.> errorcase: bif <string> will throw a type error
                     #TODOdone jump to matching "Bb"
-                    #<.!!!> errorcase: malformed bbrackets (no matching bbracket to skip to)
+                    #<!!!.> errorcase: malformed bbrackets (no matching bbracket to skip to)
                     # print("wip")
                     bbracketCounter = 1 
                     forwardOffset = 1
+
                     if currentIndex + 1 >= len(instructions):
-                        modules.error.throwError("Bif statement attempted to skip to BBrackets that do not exist", False)
+                        modules.error.throwError("Bif statement attempted to skip to a BBracket that does not exist", False)
                     if instructions[currentIndex+1] != "bB":
                         modules.error.throwError("Bif statement not followed by a set of BBrackets", False)
+
+                
                     while bbracketCounter > 0:# <!!!.> assumes that the token directly after "if" is always a bB, could cause errors
                         forwardOffset+=1
                         if currentIndex+forwardOffset >= len(instructions):
-                            modules.error.throwError("Bif statement attempted to skip to BBrackets that do not exist", False)
+                            modules.error.throwError("Bif statement attempted to skip to a BBracket that does not exist", False)
                         if instructions[currentIndex+forwardOffset] == "bB":# index + offset could lead to errors if out of bounds, which would happen with malformed bbrackets
                             bbracketCounter+=1
                         elif instructions[currentIndex+forwardOffset] == "Bb":
@@ -53,11 +56,31 @@ def executeInstructions(instructions):
             #     return getValue(instructions[currentIndex][1]) # functionality for functions (if i so wish)
             case "while":
                 # similar to if, but backwards
-                if getValue(instructions[currentIndex][1]) > 0:# if the argument is true, go back
+
+                argument = getValue(instructions[currentIndex][1])
+
+                if type(argument) != int and type(argument) != float:
+                    modules.error.throwError("Boop statement attempted to evaluate a non-numeric type", False)
+
+                
+
+                if argument > 0:# if the argument is true, go back
+
+
                     bbracketCounter = 1
                     backwardOffset = 1
-                    while bbracketCounter > 0:# <!!!> assumes that token directly after "boop" is Bb, could cause error
+
+                    if currentIndex <= 1:# if the boop is right at the beginning of the program
+                        modules.error.throwError("Boop statement attempted to return to a BBracket that does not exist", False)
+                    if instructions[currentIndex-1] != "Bb":
+                        modules.error.throwError("Boop statement not preceded by a set of BBrackets", False)
+
+                    while bbracketCounter > 0:# <!!!.> assumes that token directly after "boop" is Bb, could cause error
                         backwardOffset+=1
+
+                        if currentIndex-backwardOffset < 0:
+                            modules.error.throwError("Boop statement attempted to return to a BBracket that does not exist", False)
+
                         currentToken = instructions[currentIndex-backwardOffset]
                         if currentToken == "Bb":
                             bbracketCounter+=1
@@ -66,7 +89,11 @@ def executeInstructions(instructions):
                     currentIndex-=backwardOffset
 
             case "setVar":
-                varName = instructions[currentIndex][1] # <!!!> expects a string formatted like v0 or v82 (v<number>), anything else wont work
+                varName = instructions[currentIndex][1] # <!!!.> expects a string formatted like v0 or v82 (v<number>), anything else wont work (not a problem, parse cant give it one of those here)
+                
+                if type(varName) != str:
+                    modules.error.throwError("Bis statement not given variable to assign", False)
+
                 varID = int(varName[1:]) # chops off the v
                 # print(varID)
                 varValue = getValue(instructions[currentIndex][2])
@@ -78,6 +105,10 @@ def executeInstructions(instructions):
 
             case "setArray":
                 arrayName = instructions[currentIndex][1]
+
+                if type(varName) != str:
+                    modules.error.throwError("Bat statement not given variable to assign", False)
+
                 arrayID = int(arrayName[1:]) # chops off v, very similar to above
 
                 arrayIndex = getValue(instructions[currentIndex][2])
@@ -130,8 +161,8 @@ def getValue(input):# magic of recursion function
     if type(input) != list:
         modules.error.throwError("How did you get the data type " + str(type(input)) + " to appear? Impressive.", True)
 
-    # <!!!> errorcase: list is malformed (not 3 items, doesnt contain operation, etc)
-    # need special case for bot and binput
+    # <!!!.> errorcase: list is malformed (not 3 items, doesnt contain operation, etc)
+    # need special case for bot and binput done
     if len(input) == 2:
         match(input[0]):
             case "input":
@@ -155,6 +186,9 @@ def getValue(input):# magic of recursion function
 
     arg1 = getValue(input[0])
     arg2 = getValue(input[2])
+
+    if len(input) != 3:
+        modules.error.throwError("Cannot evaluate malformed brackets - invalid structure", False)
 
     match(input[1]):# perform the operations
         case "==":# works regardless of data types
@@ -237,4 +271,8 @@ def getValue(input):# magic of recursion function
 
             # <!!!.> assumes arg2 is within bounds
             return arg1[arg2] # <!!!.> getValue(input[0]) not a str or a list or arg2 not an int
-        
+    
+    # getting to this point means that the input was a list of three items, but the middle item was not an operation
+    # that should not happen in properly formatted b++
+
+    modules.error.throwError("Cannot evaluate malformed brackets - invalid operation", False)
