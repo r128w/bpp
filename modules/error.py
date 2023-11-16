@@ -8,5 +8,7 @@ import sys
 def throwError(message, isBig): # message is the message returned, isBig is whether this is an impressive error to encounter or not
     if isBig:
         print("Congratulations. I don't know how you got here.")
+    if type(message) != str:
+        throwError("wow", True)
     print("<!> Error: " + message)
     sys.exit()# halt entire program
