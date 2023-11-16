@@ -1,0 +1,15 @@
+b_num1 bis BB
+b_num2 bis BBb
+
+b_counter bis BB
+bB
+    b_counter bis b b_counter blus BBb B
+
+    b_temp bis b b_num1 blus b_num2 B
+
+    brint b_temp
+
+    b_num1 bis b_num2
+    b_num2 bis b_temp
+
+Bb boop b BBbbbbbbbbbbbbbbbbbbbbbbb binus b_counter B
