@@ -1,12 +1,16 @@
         
         -= B++ Docs =-
 
+Grouping expressions and instructions is done through brackets and bbrackets:
+Brackets: <function> b <expression> B
+Bbrackets: bif <arg> bB <code> Bb or bB <code> Bb boop <arg>
 
 Functions:
 brint <arg>: print <arg> to console
 bif <arg> bB ... Bb: if <arg> is 0 or below, skip to matching Bb
 bB ... Bb boop <arg>: if <arg> is above 0, jump back to the beginning of the loop
 <arg1> bis <arg2>: sets variable <arg1> to <arg2>
+<arg1> bat <arg2> bis <arg3>: sets array <arg1> at <arg2> to <arg3>
 
 Operations:
 <arg1> blus <arg2> -> <arg1> + <arg2>
@@ -14,13 +18,30 @@ Operations:
 <arg1> bimes <arg2> -> <arg1> * <arg2>
 <arg1> bivide <arg2> -> <arg1> / <arg2>
 <arg1> bat <arg2> -> <arg1>[<arg2>]
-binput <arg1> -> input(<arg1>)
 <arg1> biss <arg2> -> <arg1> == <arg2>
 <arg1> bore <arg2> -> <arg1> > <arg2>
 <arg1> bess <arg2> -> <arg1> < <arg2>
 <arg1> band <arg2> -> <arg1> and <arg2>
 bot <arg1> -> <arg1> flipped (0 -> 1, 1 -> 0)
+binput <arg1> -> input(<arg1>)
+bength <arg1> -> len(<arg1>)
 
 Literal Values:
 Strings - Surround them with BbB (BbB___BbB): BbBExampleBbB, BbBBogos Binted!BbB
-(Positive) Integers - "BB" + "b"s: "BBbbbbb" -> 5, "BBb" -> 1, "BB" -> 0
+Integers - "BB" + "b"s: "BBbbbbb" -> 5, "BBb" -> 1, "BB" -> 0
+        For negative integers, subtract zero by a positive one:
+        -1 -> b BB binus BBb B
+        -7 -> b BB binus BBbbbbbbb B
+
+
+Examples:
+print("Bogos" + " Binted")
+brint b BbBBogosBbB blus BbB BintedBbB B
+
+if (len(input("Give me a string")) > 3) {
+        print("That's a long string")
+}
+
+bif b b bength b binput BbBGive me a stringBbB B B bore BBbbb B bB
+        brint BbBThat's a long stringBbB
+Bb
