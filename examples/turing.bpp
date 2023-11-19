@@ -1,0 +1,24 @@
+
+b_program bis b binput BbBEnter Program > BbB B
+
+b_programLength bis b bength b_program B
+
+b_tapeLength bis b binput BbBData Tape Length ? BbB B
+
+b_data bis BB
+
+b_iterate bis BB
+bB 
+    b_data bat b_iterate bis BB
+    b_iterate bis b b_iterate blus BBb B
+Bb boop b b_tapeLength binus b_iterate B
+
+b_currentIndex bis BB
+bB
+
+    brint b b_program bat b_currentIndex 
+
+
+
+    b_currentIndex bis b b_currentIndex blus BBb B
+Bb boop b b_programLength binus b_currentIndex B 
