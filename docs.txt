@@ -44,7 +44,7 @@ if (len(userInput) > 3) {
         print("That's a long string")
 }
 
-buserinput bis b binput BbBGive me a stringBbB B
+buserinput bis b binput BbBGive me a string >BbB B
 bif b b bength buserinput B bore BBbbb B bB
         brint BbBThat's a long stringBbB
 Bb
