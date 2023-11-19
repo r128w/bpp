@@ -12,6 +12,8 @@ bB ... Bb boop <arg>: if <arg> is above 0, jump back to the beginning of the loo
 <arg1> bis <arg2>: sets variable <arg1> to <arg2>
 <arg1> bat <arg2> bis <arg3>: sets array <arg1> at <arg2> to <arg3>
 
+Only words that start with "b" or "B" are allowed in this language, including variable names.
+
 Operations:
 <arg1> blus <arg2> -> <arg1> + <arg2>
 <arg1> binus <arg2> -> <arg1> - <arg2>
@@ -33,15 +35,16 @@ Integers - "BB" + "b"s: "BBbbbbb" -> 5, "BBb" -> 1, "BB" -> 0
         -1 -> b BB binus BBb B
         -7 -> b BB binus BBbbbbbbb B
 
-
 Examples:
 print("Bogos" + " Binted")
 brint b BbBBogosBbB blus BbB BintedBbB B
 
-if (len(input("Give me a string")) > 3) {
+userInput = input("Give me a string >")
+if (len(userInput) > 3) {
         print("That's a long string")
 }
 
-bif b b bength b binput BbBGive me a stringBbB B B bore BBbbb B bB
+buserinput bis b binput BbBGive me a stringBbB B
+bif b b bength buserinput B bore BBbbb B bB
         brint BbBThat's a long stringBbB
 Bb
