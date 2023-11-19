@@ -200,7 +200,7 @@ def getValue(input):# magic of recursion function
         case "+":
 
             if modules.utilities.isNumericType(arg1) == False or modules.utilities.isNumericType(arg2) == False:
-                if type(arg1) == list & type(arg2) == list:
+                if type(arg1) == list and type(arg2) == list:
                     return arg1 + arg2
                 return str(arg1) + str(arg2)
 
