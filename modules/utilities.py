@@ -27,6 +27,11 @@ def isFloat(string):# checks if a string can be float()ed
         return False
     return True
 
+def isNumericType(input):
+    if type(input) != int and type(input) != float:
+        return False
+    return True
+
 
 def getInput(prompt):# takes a string as a prompt, and returns user input - but the input is a float or int if necessary
     rawInput = input(prompt)
