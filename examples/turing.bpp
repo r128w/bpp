@@ -14,11 +14,96 @@ bB
 Bb boop b b_tapeLength binus b_iterate B
 
 b_currentIndex bis BB
+b_dataIndex bis BB
 bB
 
-    brint b b_program bat b_currentIndex 
+    brint b b_program bat b_currentIndex B
 
+    b_currentInstruction bis b b_program bat b_currentIndex B
+
+    bif b b_currentInstruction biss BbB+BbB B bB
+        b_data bat b_dataIndex bis b 
+            b b_data bat b_dataIndex B blus BBb 
+        B
+    Bb
+
+    bif b b_currentInstruction biss BbB-BbB B bB
+        b_data bat b_dataIndex bis b 
+            b b_data bat b_dataIndex B binus BBb 
+        B
+    Bb
+
+    bif b b_currentInstruction biss BbB>BbB B bB
+        b_dataIndex bis b b_dataIndex blus BBb B
+        bif b b_dataIndex bore b b_tapeLength binus BBb B B bB
+            b_dataIndex bis BB
+        Bb
+    Bb
+
+    bif b b_currentInstruction biss BbB<BbB B bB
+        b_dataIndex bis b b_dataIndex binus BBb B
+        bif b b_dataIndex bess BB B bB
+            b_dataIndex bis b b_tapeLength binus BBb B
+        Bb
+    Bb
+
+    bif b b_currentInstruction biss BbB.BbB B bB
+        brint b BbBOutput: BbB blus b b_data bat b_dataIndex B B
+    Bb
+
+    bif b b_currentInstruction biss BbB,BbB B bB
+        b_data bat b_dataIndex bis b binput BbBProgram Input (int) > BbB B
+    Bb
+
+    bif b b_currentInstruction biss BbB[BbB B bB
+        bif b b b_data bat b_dataIndex B biss BB B bB
+
+            b_counter bis BB
+            b_look bis BB
+            bB
+                bif b b b_program bat b b_currentIndex blus b_look B B biss BbB[BbB B bB
+                    b_counter bis b b_counter blus BBb B
+                Bb
+
+                bif b b b_program bat b b_currentIndex blus b_look B B biss BbB]BbB B bB
+                    b_counter bis b b_counter binus BBb B
+                Bb
+
+                b_look bis b b_look blus BBb B
+            Bb boop b_counter
+
+            b_look bis b b_look binus BBb B
+
+            b_currentIndex bis b b_currentIndex blus b_look B
+
+        Bb
+    Bb
+
+    bif b b_currentInstruction biss BbB]BbB B bB
+        bif b bot b b b_data bat b_dataIndex B biss BB B B bB
+
+            b_counter bis BB
+            b_look bis BB
+            bB
+
+                bif b b b_program bat b b_currentIndex blus b_look B B biss BbB[BbB B bB
+                    b_counter bis b b_counter binus BBb B
+                Bb
+
+                bif b b b_program bat b b_currentIndex blus b_look B B biss BbB]BbB B bB
+                    b_counter bis b b_counter blus BBb B
+                Bb
+
+                b_look bis b b_look binus BBb B
+            Bb boop b_counter
+
+            b_currentIndex bis b b_currentIndex blus b_look B
+
+        Bb
+    Bb
 
 
     b_currentIndex bis b b_currentIndex blus BBb B
 Bb boop b b_programLength binus b_currentIndex B 
+
+brint b_data
