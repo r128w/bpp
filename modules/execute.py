@@ -12,7 +12,7 @@ variables = []
 
 def executeInstructions(instructions):
     # print("Instruction list:")
-    # print(instructions)
+    print(instructions)
     # print("")
     currentIndex = 0
     
@@ -199,31 +199,30 @@ def getValue(input):# magic of recursion function
 
         case "+":
 
-            if type(arg1) != type(arg2):
-                modules.error.throwError("Attempted to add two different types", False)
-
-            if type(arg1) != str and type(arg1) != int and type(arg1) != float:
-                modules.error.throwError("Attempted to add non-summable type", False)
+            if modules.utilities.isNumericType(arg1) == False or modules.utilities.isNumericType(arg2) == False:
+                if type(arg1) == list & type(arg2) == list:
+                    return arg1 + arg2
+                return str(arg1) + str(arg2)
 
             return arg1 + arg2# <!!!.> errorcase: different types
 
         case "-":
 
-            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+            if modules.utilities.isNumericType(arg1) == False or modules.utilities.isNumericType(arg2) == False:
                 modules.error.throwError("Attempted to subtract non-numeric types", False)
 
             return arg1 - arg2# <!!!.> errorcase: not numbers
 
         case "*":
         
-            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+            if modules.utilities.isNumericType(arg1) == False or modules.utilities.isNumericType(arg2) == False:
                 modules.error.throwError("Attempted to multiply non-numeric types", False)
 
             return arg1 * arg2# <!!!.> errorcase: not numbers
 
         case "/":
         
-            if (type(arg1) != int and type(arg1) != float) or (type(arg2) != int and type(arg2) != float):
+            if modules.utilities.isNumericType(arg1) == False or modules.utilities.isNumericType(arg2) == False:
                 modules.error.throwError("Attempted to divide non-numeric types", False)
 
             if arg2 == 0:
