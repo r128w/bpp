@@ -1,6 +1,6 @@
 # b++: The b-quel to the c-quel
 
-A more versatile, expanded version of B
+<p>A more versatile, expanded version of B</p>
 
-You need Python installed to run the .bat (it's a one-liner that runs the python with py)
-bpp <file>.bpp
+<p>You need Python installed to run the .bat (it's a one-liner that runs the python with py)</p>
+<p>bpp file.bpp</p>
