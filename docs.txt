@@ -26,7 +26,7 @@ Operations:
 <arg1> band <arg2> -> <arg1> and <arg2>
 bot <arg1> -> <arg1> flipped (0 -> 1, 1 -> 0)
 binput <arg1> -> input(<arg1>)
-bength <arg1> -> len(<arg1>)
+bength <arg1> -> len(<arg1>) or <arg1>.length
 
 Literal Values:
 Strings - Surround them with BbB (BbB___BbB): BbBExampleBbB, BbBBogos Binted!BbB
@@ -48,3 +48,4 @@ buserinput bis b binput BbBGive me a string >BbB B
 bif b b bength buserinput B bore BBbbb B bB
         brint BbBThat's a long stringBbB
 Bb
+
